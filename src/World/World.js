@@ -5,21 +5,24 @@ import { createLights } from "./components/lights";
 import { createTerrain } from "./components/objects/terrain";
 import { Resizer } from "./systems/Resizer";
 import { Loop } from "./systems/Loop";
+import { createControls } from "./systems/controls";
 
 let camera;
 let scene;
 let renderer;
 let loop;
-let color = "blue";
+let color = "#0aa316";
 
 class World {
   constructor(container) {
     camera = createCamera();
-    scene = createScene("green");
+    scene = createScene("#10abee");
     renderer = createRenderer();
 
     loop = new Loop(camera, scene, renderer);
     container.append(renderer.domElement);
+
+    const controls = createControls(camera, renderer.domElement);
 
     const { light, lightHelper } = createLights("white");
     const randomVals = [];
@@ -28,8 +31,9 @@ class World {
       randomVals.push(Math.random() - 0.5);
     }
 
-    let terrain = createTerrain({ color: color, randomVertexArr: randomVals });
+    let terrain = createTerrain({ color: color, randVertexArr: randomVals });
 
+    loop.updatables.push(controls);
     loop.updatables.push(light);
     loop.updatables.push(terrain);
 
